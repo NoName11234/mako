@@ -1,0 +1,5 @@
+<resources>
+    <style name="Theme.Colibri"
+        parent="android:Theme.DeviceDefault.NoActionBar">
+    </style>
+</resources>
