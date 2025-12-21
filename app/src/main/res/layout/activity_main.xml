@@ -1,12 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:orientation="vertical"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
-
-<ListView
-    android:id="@+id/appList"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:divider="@null" />
+    android:padding="16dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingVertical="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <!-- Clock -->
+        <Button
+            android:text="23:00"
+            android:textSize="32sp"
+            android:padding="0dp"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            />
+
+        <!-- Date / Weather row -->
+
+        <TextView
+            android:id="@+id/date"
+            android:text="01 Jan 1999 | 0°F | 0%"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    <!-- App list -->
+    <ListView
+        android:id="@+id/appList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@null" />
+
 </LinearLayout>

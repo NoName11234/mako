@@ -1,5 +1,11 @@
 <resources>
     <style name="Theme.Colibri"
         parent="android:Theme.DeviceDefault.NoActionBar">
+        <!-- Make status bar transparent -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!-- Hide the status bar -->
+        <item name="android:windowFullscreen">true</item>
+        <!-- Optional: let layout extend under notch/cutout on API 28+ -->
+        <!-- Removed: windowLayoutInDisplayCutoutMode -->
     </style>
 </resources>
