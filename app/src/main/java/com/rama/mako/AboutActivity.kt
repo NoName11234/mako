@@ -3,6 +3,9 @@ package com.rama.mako
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import android.content.Intent
+import android.net.Uri
+import android.widget.LinearLayout
 
 class AboutActivity : Activity() {
 
@@ -21,6 +24,24 @@ class AboutActivity : Activity() {
             val topInset = insets.systemWindowInsetTop
             v.setPadding(v.paddingLeft, topInset, v.paddingRight, v.paddingBottom)
             insets
+        }
+
+        val repoButton = findViewById<LinearLayout>(R.id.repo_button)
+        repoButton.setOnClickListener {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://github.com/jmiguelrivas/mako")
+            )
+            startActivity(intent)
+        }
+
+        val creatorButton = findViewById<LinearLayout>(R.id.creator_button)
+        creatorButton.setOnClickListener {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://github.com/jmiguelrivas")
+            )
+            startActivity(intent)
         }
     }
 }

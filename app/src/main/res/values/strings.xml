@@ -6,4 +6,7 @@
     <string name="icon_location_desc">No Trackers</string>
     <string name="icon_offline_desc">Works Offline</string>
     <string name="icon_license_desc">License GPLv3</string>
+    <string name="app_repo">github.com/jmiguelrivas/mako</string>
+    <string name="app_creator">Miguel Rivas</string>
+    <string name="author_app_creator">Author: Miguel Rivas</string>
 </resources>

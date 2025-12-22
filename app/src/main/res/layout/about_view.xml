@@ -22,51 +22,100 @@
         android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:textColor="@color/text_light" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="start">
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical">
 
         <com.rama.mako.ListItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:text="@string/icon_ads_desc"
-            app:icon="@drawable/ads_click" />
+            app:icon="@drawable/ads_click"
+            app:text="@string/icon_ads_desc" />
 
         <com.rama.mako.ListItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:text="@string/icon_block_desc"
-            app:icon="@drawable/block" />
+            app:icon="@drawable/block"
+            app:text="@string/icon_block_desc" />
 
         <com.rama.mako.ListItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:text="@string/icon_location_desc"
-            app:icon="@drawable/location_on" />
+            app:icon="@drawable/location_on"
+            app:text="@string/icon_location_desc" />
 
         <com.rama.mako.ListItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:text="@string/icon_offline_desc"
-            app:icon="@drawable/wifi" />
+            app:icon="@drawable/wifi"
+            app:text="@string/icon_offline_desc" />
 
         <com.rama.mako.ListItem
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:text="@string/icon_license_desc"
-            app:icon="@drawable/shield" />
+            app:icon="@drawable/shield"
+            app:text="@string/icon_license_desc" />
     </LinearLayout>
 
-    <TextView
-        android:text="github.com/jmiguelrivas/maco"
-        android:textSize="16sp"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/repo_button"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/text_light"
-        android:padding="12dp"
-        android:background="@drawable/bg_tertiary_rounded" />
+        android:padding="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_button_rounded"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/computer"
+            android:layout_marginEnd="8dp"
+            />
+
+        <TextView
+            android:text="@string/app_repo"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/bg_dark"
+             />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/creator_button"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:padding="8dp"
+        android:background="@drawable/bg_button_rounded"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/person"
+            android:layout_marginEnd="8dp"
+            />
+
+        <TextView
+            android:text="@string/author_app_creator"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/bg_dark"
+            />
+    </LinearLayout>
 </LinearLayout>
