@@ -17,22 +17,40 @@ class MainActivity : Activity() {
     private lateinit var clockManager: ClockManager
     private lateinit var batteryHelper: BatteryManagerHelper
 
+    private fun dp(value: Int): Int {
+        return (value * resources.displayMetrics.density).toInt()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Load saved theme
+        // Load saved theme BEFORE super.onCreate
         val prefs = getSharedPreferences("prefs", MODE_PRIVATE)
         val themeRes = prefs.getInt("theme", R.style.Theme_Mako_Obsidian)
         setTheme(themeRes)
 
         super.onCreate(savedInstanceState)
 
-        // Fullscreen
+        // Allow layout behind system bars (no AndroidX)
         @Suppress("DEPRECATION")
         window.decorView.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
+        // Inflate layout FIRST
         setContentView(R.layout.view_home)
+
+        // Root view for safe-area padding
+        val root = findViewById<View>(R.id.root)
+
+        root.setOnApplyWindowInsetsListener { view, insets ->
+            view.setPadding(
+                insets.systemWindowInsetLeft + dp(32),
+                insets.systemWindowInsetTop + dp(32),
+                insets.systemWindowInsetRight + dp(32),
+                insets.systemWindowInsetBottom + dp(32)
+            )
+            insets
+        }
 
         // Find views
         timeText = findViewById(R.id.time)
@@ -40,41 +58,35 @@ class MainActivity : Activity() {
         batteryText = findViewById(R.id.battery)
         listView = findViewById(R.id.appList)
 
-        // ClockManager updates dateText
+        // Clock
         clockManager = ClockManager(timeText, dateText)
-
-        // Start the clock updates
         clockManager.start()
 
-        // BatteryManagerHelper updates batteryText
-        batteryHelper = BatteryManagerHelper(this) { batteryStatus ->
-            batteryText.text = batteryStatus
+        // Battery
+        batteryHelper = BatteryManagerHelper(this) { status ->
+            batteryText.text = status
         }
         batteryHelper.register()
 
         // App list
-        val appListHelper = AppListHelper(this, listView)
-        appListHelper.setup()
+        AppListHelper(this, listView).setup()
 
-        // Open clock on time click
+        // Open system clock
         timeText.setOnClickListener {
             val clockIntent = Intent(Intent.ACTION_MAIN).apply {
                 addCategory("android.intent.category.APP_CLOCK")
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
 
-            val pm = packageManager
-            val resolved = clockIntent.resolveActivity(pm)
-            if (resolved != null) {
+            if (clockIntent.resolveActivity(packageManager) != null) {
                 startActivity(clockIntent)
             } else {
                 Toast.makeText(this, "No clock app found", Toast.LENGTH_SHORT).show()
             }
         }
 
-        val settingsButton = findViewById<View>(R.id.settings_button)
-
-        settingsButton.setOnClickListener {
+        // Settings
+        findViewById<View>(R.id.settings_button).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
     }
