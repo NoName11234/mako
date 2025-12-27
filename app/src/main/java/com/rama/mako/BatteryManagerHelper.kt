@@ -21,7 +21,7 @@ class BatteryManagerHelper(
             ) / 10f) * 9f / 5f) + 32f).toInt()
 
             if (level >= 0 && scale > 0) {
-                val status = "BATT: ${(level * 100 / scale.toFloat()).toInt()}% :: $tempF°F"
+                val status = "${(level * 100 / scale.toFloat()).toInt()}% :: $tempF°F"
                 callback(status)
             }
         }
