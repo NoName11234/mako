@@ -1,5 +1,3 @@
-![Mako Launcher](https://raw.githubusercontent.com/jmiguelrivas/mako/main/fastlane/metadata/android/en-US/images/featureGraphic.png)
-
 # Mako Launcher
 
 **Mako Launcher** is a **minimal, privacy-first Android launcher** designed for focus, speed, and simplicity.
@@ -29,9 +27,9 @@ Everything runs locally, with **no background services** unless explicitly neede
 
 ## • Screenshots
 
-| Home | App Drawer | Settings | About |
-|------|------------|----------|-------|
-| ![Home](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Drawer](fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) | ![Settings](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) | ![About](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png) |
+| Home | Settings | About |
+|-|-|-|
+| ![Home](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png) | ![Settings](fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) | ![About](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png) |
 
 ---
 
