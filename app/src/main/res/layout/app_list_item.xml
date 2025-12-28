@@ -1,9 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text1"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textColor="@color/foreground_color"
-    android:padding="8dp"
-    android:textSize="16sp"
-    android:gravity="start" />
+    android:paddingBottom="4dp"
+    android:gravity="center_vertical">
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/foreground_color"
+        android:padding="8dp"
+        android:layout_weight="1"
+        android:gravity="start|center_vertical"
+        android:textSize="16sp" />
+
+    <FrameLayout
+        android:id="@+id/favorite_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="4dp">
+
+        <ImageView
+            android:id="@+id/favorite_icon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/star_toggle" />
+    </FrameLayout>
+
+    <!--    <FrameLayout-->
+    <!--        android:id="@+id/close_button"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:clickable="true"-->
+    <!--        android:focusable="true"-->
+    <!--        android:padding="4dp">-->
+
+    <!--        <ImageView-->
+    <!--            android:layout_width="22dp"-->
+    <!--            android:layout_height="22dp"-->
+    <!--            android:src="@drawable/close" />-->
+    <!--    </FrameLayout>-->
+</LinearLayout>
