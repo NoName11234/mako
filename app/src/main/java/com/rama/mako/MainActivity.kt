@@ -24,8 +24,6 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         // Load saved theme BEFORE super.onCreate
         val prefs = getSharedPreferences("prefs", MODE_PRIVATE)
-        val themeRes = prefs.getInt("theme", R.style.Theme_Mako_Obsidian)
-        setTheme(themeRes)
 
         super.onCreate(savedInstanceState)
 
@@ -97,7 +95,7 @@ class MainActivity : Activity() {
 
             Toast.makeText(this, "No clock app found", Toast.LENGTH_SHORT).show()
         }
-        
+
         // Settings
         findViewById<View>(R.id.settings_button).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))

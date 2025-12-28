@@ -1,17 +1,12 @@
 <resources>
     <!-- Base theme -->
     <style name="Theme.Mako" parent="android:Theme.DeviceDefault.NoActionBar">
-        <item name="bgTheme">@color/bg_theme</item>
-        <item name="textTheme">@color/text_theme</item>
+        <item name="bgColor">@color/bg_color</item>
+        <item name="foregroundColor">@color/foreground_color</item>
 
-        <item name="android:windowBackground">?attr/bgTheme</item>
-        <item name="android:textColor">?attr/textTheme</item>
+        <item name="android:windowBackground">?attr/bgColor</item>
+        <item name="android:textColor">?attr/foregroundColor</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowFullscreen">true</item>
-    </style>
-
-    <!-- Obsidian -->
-    <style name="Theme.Mako.Obsidian" parent="Theme.Mako">
-        <item name="bgTheme">@color/bg_theme_obsidian</item>
     </style>
 </resources>

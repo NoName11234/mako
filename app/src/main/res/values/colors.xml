@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_theme">#141417</color>
-    <color name="text_theme">#cccccc</color>
-
-    <color name="bg_theme_obsidian">#141417</color>
-    <color name="bg_theme_emerald">#284346</color>
-    <color name="bg_theme_night">#282846</color>
-    <color name="bg_theme_clay">#202028</color>
+    <color name="bg_color">#141417</color>
+    <color name="foreground_color">#CCCCCC</color>
 
     <!-- UI -->
-    <color name="bg_dark">#141417</color>
-    <color name="text_light">#cccccc</color>
     <color name="secondary_bg">#1f1f21</color>
     <color name="tertiary_bg">#322f1b</color>
     <color name="accent">#abd68e</color>

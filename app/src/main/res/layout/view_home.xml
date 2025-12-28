@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
     android:orientation="vertical"
-    android:textColor="@color/text_theme"
+    android:textColor="@color/foreground_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/bgTheme"
+    android:background="?attr/bgColor"
     android:padding="32dp">
 
     <LinearLayout
@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="start|center_vertical"
-                android:textColor="@color/text_theme" />
+                android:textColor="@color/foreground_color" />
 
             <FrameLayout
                 android:id="@+id/settings_button"
@@ -61,7 +61,7 @@
 
             <TextView
                 android:id="@+id/date"
-                android:textColor="@color/text_theme"
+                android:textColor="@color/foreground_color"
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -82,7 +82,7 @@
 
             <TextView
                 android:id="@+id/battery"
-                android:textColor="@color/text_theme"
+                android:textColor="@color/foreground_color"
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

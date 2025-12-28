@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/bg_dark">
+    android:background="@color/bg_color">
 
     <LinearLayout
         android:orientation="vertical"
@@ -29,7 +29,7 @@
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_light" />
+                android:textColor="@color/foreground_color" />
         </FrameLayout>
 
         <FrameLayout
@@ -48,7 +48,7 @@
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_light" />
+                android:textColor="@color/foreground_color" />
         </FrameLayout>
 
         <FrameLayout
@@ -67,7 +67,7 @@
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_light" />
+                android:textColor="@color/foreground_color" />
         </FrameLayout>
 
         <FrameLayout
@@ -86,7 +86,7 @@
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_light" />
+                android:textColor="@color/foreground_color" />
         </FrameLayout>
 
         <FrameLayout
@@ -105,7 +105,7 @@
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_light" />
+                android:textColor="@color/foreground_color" />
         </FrameLayout>
 
         <LinearLayout
@@ -126,7 +126,7 @@
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/bg_dark" />
+                android:textColor="@color/bg_color" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
