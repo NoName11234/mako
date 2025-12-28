@@ -1,3 +1,5 @@
+![Home](https://raw.githubusercontent.com/jmiguelrivas/mako/main/fastlane/metadata/android/en-US/images/featureGraphic.png) 
+
 # Mako
 
 **Mako** is a **minimal, privacy-first Android launcher** designed for focus, speed, and
