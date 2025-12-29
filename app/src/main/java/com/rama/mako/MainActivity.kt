@@ -3,12 +3,10 @@ package com.rama.mako
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.View
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
-import kotlin.math.abs
 
 class MainActivity : Activity() {
 
@@ -69,32 +67,6 @@ class MainActivity : Activity() {
         AppListHelper(this, listView).setup()
 
         timeText.setOnClickListener { openSystemClock() }
-
-        // Swipe left → settings (ignore mostly vertical scrolls)
-        root.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    startX = event.x
-                    startY = event.y
-                    true
-                }
-
-                MotionEvent.ACTION_UP -> {
-                    val deltaX = startX - event.x
-                    val deltaY = startY - event.y
-
-                    // Only trigger if mostly horizontal and enough distance
-                    if (abs(deltaX) > dp(120) && abs(deltaX) > abs(deltaY)) {
-                        startActivity(Intent(this, SettingsActivity::class.java))
-                        true
-                    } else {
-                        false
-                    }
-                }
-
-                else -> false
-            }
-        }
     }
 
     override fun onResume() {

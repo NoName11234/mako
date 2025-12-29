@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.ArrayAdapter
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
@@ -19,9 +18,7 @@ class AppListHelper(
 ) {
 
     private val prefs = context.getSharedPreferences("favorites", Context.MODE_PRIVATE)
-
-    // Package name of the row currently showing actions
-    private var openActionsFor: String? = null
+    private var openActionsFor: String? = null // currently open row actions
 
     fun setup() {
         val pm = context.packageManager
@@ -34,33 +31,34 @@ class AppListHelper(
         fun sortApps() {
             apps.sortWith(
                 compareByDescending<ResolveInfo> {
-                    prefs.getBoolean(
-                        it.activityInfo.packageName,
-                        false
-                    )
+                    prefs.getBoolean(it.activityInfo.packageName, false)
+                }.thenBy {
+                    it.loadLabel(pm).toString().lowercase()
                 }
-                    .thenBy { it.loadLabel(pm).toString().lowercase() }
             )
         }
 
         sortApps()
 
-        val adapter = object :
-            ArrayAdapter<ResolveInfo>(context, R.layout.app_list_item, R.id.open_app_button, apps) {
+        val adapter = object : ArrayAdapter<ResolveInfo>(
+            context,
+            R.layout.app_list_item,
+            R.id.open_app_button,
+            apps
+        ) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent)
                 val app = getItem(position) ?: return view
                 val pkg = app.activityInfo.packageName
 
-                // Views
                 val label = view.findViewById<TextView>(R.id.open_app_button)
+                val emptySpace = view.findViewById<View>(R.id.empty_space)
                 val favButton = view.findViewById<View>(R.id.favorite_button)
                 val favIcon = view.findViewById<ImageView>(R.id.favorite_icon)
                 val closeButton = view.findViewById<View>(R.id.close_button)
                 val actions = view.findViewById<View>(R.id.actions_container)
                 val bottomBorder = view.findViewById<View>(R.id.favorite_bottom_border)
 
-                // Label text
                 label.text = app.loadLabel(pm)
 
                 // Restore favorite state
@@ -69,15 +67,8 @@ class AppListHelper(
                 // Show/hide actions
                 actions.visibility = if (openActionsFor == pkg) View.VISIBLE else View.GONE
 
-                // Short tap → launch app
+                // Tap on label → launch app
                 label.setOnClickListener {
-                    if (openActionsFor != null) {
-                        // Hide any open actions first
-                        openActionsFor = null
-                        notifyDataSetChanged()
-                        return@setOnClickListener
-                    }
-
                     val launchIntent = Intent().apply {
                         setClassName(pkg, app.activityInfo.name)
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -94,15 +85,18 @@ class AppListHelper(
                     }
                 }
 
-                // Long press → show actions
+                // Long press on label → open row actions
                 label.setOnLongClickListener {
                     openActionsFor = pkg
                     notifyDataSetChanged()
                     true
                 }
 
-                // Disable row-level long press
-                view.isLongClickable = false
+                // Long press on empty space → open global settings
+                emptySpace.setOnLongClickListener {
+                    context.startActivity(Intent(context, SettingsActivity::class.java))
+                    true
+                }
 
                 // Favorite toggle
                 favButton.setOnClickListener {
@@ -110,6 +104,7 @@ class AppListHelper(
                     favIcon.isSelected = newState
                     prefs.edit().putBoolean(pkg, newState).apply()
                     sortApps()
+                    notifyDataSetChanged()
                     openActionsFor = null
                     notifyDataSetChanged()
                 }
@@ -120,13 +115,14 @@ class AppListHelper(
                     notifyDataSetChanged()
                 }
 
-                // Bottom border for last favorite
+                // Show bottom border only for last favorite
                 val isFavorite = favIcon.isSelected
                 val isLastFavorite = isFavorite && (
-                        position == apps.size - 1 || !prefs.getBoolean(
-                            getItem(position + 1)!!.activityInfo.packageName,
-                            false
-                        )
+                        position == apps.size - 1 ||
+                                !prefs.getBoolean(
+                                    getItem(position + 1)!!.activityInfo.packageName,
+                                    false
+                                )
                         )
                 bottomBorder.visibility = if (isLastFavorite) View.VISIBLE else View.GONE
 
@@ -150,8 +146,7 @@ class AppListHelper(
                 firstVisibleItem: Int,
                 visibleItemCount: Int,
                 totalItemCount: Int
-            ) {
-            }
+            ) = Unit
         })
     }
 }

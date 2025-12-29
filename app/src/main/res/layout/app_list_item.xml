@@ -1,11 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:background="@color/bg_color"
-    android:clickable="false"
-    android:focusable="false"
-    android:foreground="@null"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/bg_color">
 
     <!-- Divider, hidden by default -->
     <View
@@ -16,30 +13,32 @@
         android:visibility="gone" />
 
     <!-- Horizontal row -->
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
 
-        <!-- Open app button -->
+        <!-- App label -->
         <FrameLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="start|center_vertical">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/open_app_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:textColor="@color/foreground_color"
-                android:textSize="16sp" />
-
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:textColor="@color/foreground_color" />
         </FrameLayout>
+
+        <!-- Empty space for global settings long press -->
+        <FrameLayout
+            android:id="@+id/empty_space"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <!-- Actions container -->
         <FrameLayout
@@ -88,6 +87,7 @@
         </FrameLayout>
     </LinearLayout>
 
+    <!-- Optional bottom border for last favorite -->
     <TextView
         android:id="@+id/favorite_bottom_border"
         android:layout_width="match_parent"
