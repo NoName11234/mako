@@ -11,32 +11,25 @@ android {
         applicationId = "com.rama.mako"
         minSdk = 26
         targetSdk = 36
-        versionCode = 8
-        versionName = "20251229_4"
+        versionCode = 9
+        versionName = "20251229_5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    flavorDimensions += listOf("mode")
-
-    productFlavors {
-        create("dev") {
-            dimension = "mode"
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-debug"
-        }
-        create("prod") {
-            dimension = "mode"
-            // No suffix for production
-        }
-    }
-
     buildTypes {
-        getByName("debug") {
+        debug {
+            // Prevent override of production
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-dev"
+
+            isDebuggable = true
             isMinifyEnabled = false
         }
-        getByName("release") {
+
+        release {
             isMinifyEnabled = false
+            isDebuggable = false
         }
     }
 
@@ -51,13 +44,12 @@ android {
 }
 
 dependencies {
-    // App
     implementation(libs.androidx.core.ktx)
 
-    // Local unit tests (JVM)
+    // Local unit tests
     testImplementation("junit:junit:4.13.2")
 
-    // Instrumentation tests (device / emulator)
+    // Instrumentation tests
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
