@@ -25,7 +25,7 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:text="Set Launcher as Default"
+                android:text="@string/set_default"
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:text="Refresh Launcher"
+                android:text="@string/refresh_launcher"
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:text="Edit Apps"
+                android:text="@string/edit_apps"
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:text="Change OS Wallpaper"
+                android:text="@string/change_wallpaper"
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:text="About Mako"
+                android:text="@string/about"
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

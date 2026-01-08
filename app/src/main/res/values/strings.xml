@@ -11,4 +11,9 @@
     <string name="app_creator">Miguel Rivas</string>
     <string name="author_app_creator">Author: Miguel Rivas</string>
     <string name="close">Close</string>
+    <string name="set_default">Set Launcher as Default</string>
+    <string name="refresh_launcher">Refresh Launcher</string>
+    <string name="change_wallpaper">Change OS Wallpaper</string>
+    <string name="about">About Mako</string>
+    <string name="edit_apps">Edit Apps</string>
 </resources>
