@@ -1,3 +1,1 @@
-Mako is a minimal, privacy-first Android launcher designed for focus, speed, and simplicity.
-
-Built entirely in native Kotlin, Mako runs fully on-device, avoids tracking, and keeps distractions to a minimum by emphasizing clarity and intentional interaction.
+Built entirely in native Kotlin, runs fully on-device, avoids tracking, and keeps distractions to a minimum by emphasizing clarity and intentional interaction.

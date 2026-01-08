@@ -9,10 +9,10 @@ android {
 
     defaultConfig {
         applicationId = "com.rama.mako"
-        minSdk = 26
+        minSdk = 30
         targetSdk = 36
-        versionCode = 11
-        versionName = "20251230_2"
+        versionCode = 12
+        versionName = "26.01.08"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

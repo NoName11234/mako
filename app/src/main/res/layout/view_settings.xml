@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
-        android:padding="32dp">
+        android:padding="16dp">
 
         <FrameLayout
             android:id="@+id/activate_button"
@@ -88,75 +88,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/foreground_color" />
         </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/bg_secondary_rounded"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Show clock"
-                android:textSize="16sp"
-                android:textColor="@color/foreground_color" />
-
-            <Switch
-                android:id="@+id/toggle_clock"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/bg_secondary_rounded"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Show date"
-                android:textSize="16sp"
-                android:textColor="@color/foreground_color" />
-
-            <Switch
-                android:id="@+id/toggle_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/bg_secondary_rounded"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Show battery"
-                android:textSize="16sp"
-                android:textColor="@color/foreground_color" />
-
-            <Switch
-                android:id="@+id/toggle_battery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/about_button"

@@ -6,17 +6,10 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.widget.Toast
-import android.widget.Switch
 
 class SettingsActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Apply system UI flags
-        @Suppress("DEPRECATION")
-        window.decorView.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
         setContentView(R.layout.view_settings)
 
@@ -60,38 +53,6 @@ class SettingsActivity : Activity() {
         findViewById<View>(R.id.change_apps_button).setOnClickListener {
             val intent = Intent(android.provider.Settings.ACTION_APPLICATION_SETTINGS)
             startActivity(intent)
-        }
-
-        // Toggle Clock
-        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
-        val toggleClock = findViewById<Switch>(R.id.toggle_clock)
-
-        toggleClock.isChecked = prefs.getBoolean("show_clock", true)
-
-        toggleClock.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit()
-                .putBoolean("show_clock", isChecked)
-                .apply()
-        }
-
-        // Toggle Date
-        val toggleDate = findViewById<Switch>(R.id.toggle_date)
-        toggleDate.isChecked = prefs.getBoolean("show_date", true)
-
-        toggleDate.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit()
-                .putBoolean("show_date", isChecked)
-                .apply()
-        }
-
-        // Toggle Battery
-        val toggleBattery = findViewById<Switch>(R.id.toggle_battery)
-        toggleBattery.isChecked = prefs.getBoolean("show_battery", true)
-
-        toggleBattery.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit()
-                .putBoolean("show_battery", isChecked)
-                .apply()
         }
     }
 

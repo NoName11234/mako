@@ -3,6 +3,8 @@ package com.rama.mako
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
+import android.net.Uri
+import android.provider.Settings
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
@@ -17,19 +19,36 @@ class AppListHelper(
     private val listView: ListView
 ) {
 
+    // ------------------------------------------------------------------------
+    // State
+    // ------------------------------------------------------------------------
+
     private val prefs =
         context.getSharedPreferences("favorites", Context.MODE_PRIVATE)
 
     private val pm = context.packageManager
     private val apps = mutableListOf<ResolveInfo>()
 
+    private lateinit var adapter: ArrayAdapter<ResolveInfo>
+
     private var openActionsFor: String? = null
+
+    // ------------------------------------------------------------------------
+    // Public API
+    // ------------------------------------------------------------------------
 
     fun setup() {
         loadApps()
         sortApps()
         setupAdapter()
         setupScrollListener()
+    }
+
+    fun refresh() {
+        openActionsFor = null
+        loadApps()
+        sortApps()
+        adapter.notifyDataSetChanged()
     }
 
     // ------------------------------------------------------------------------
@@ -69,7 +88,7 @@ class AppListHelper(
     // Actions
     // ------------------------------------------------------------------------
 
-    private fun launchApp(pkg: String, adapter: ArrayAdapter<*>) {
+    private fun launchApp(pkg: String) {
         val intent = pm.getLaunchIntentForPackage(pkg)
 
         if (intent != null) {
@@ -82,23 +101,30 @@ class AppListHelper(
                 Toast.LENGTH_SHORT
             ).show()
 
-            // Remove flaky apps from favorites only
             removeFavorite(pkg)
-
             openActionsFor = null
-            sortApps()
-            adapter.notifyDataSetChanged()
+            refresh()
         }
     }
 
-    private fun openRowActions(pkg: String, adapter: ArrayAdapter<*>) {
+    private fun openRowActions(pkg: String) {
         openActionsFor = pkg
         adapter.notifyDataSetChanged()
     }
 
-    private fun closeRowActions(adapter: ArrayAdapter<*>) {
+    private fun closeRowActions() {
         openActionsFor = null
         adapter.notifyDataSetChanged()
+    }
+
+    private fun openAppSettings(pkg: String) {
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", pkg, null)
+        ).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
     }
 
     // ------------------------------------------------------------------------
@@ -106,7 +132,7 @@ class AppListHelper(
     // ------------------------------------------------------------------------
 
     private fun setupAdapter() {
-        val adapter = object : ArrayAdapter<ResolveInfo>(
+        adapter = object : ArrayAdapter<ResolveInfo>(
             context,
             R.layout.app_list_item,
             R.id.open_app_button,
@@ -132,36 +158,32 @@ class AppListHelper(
                 val closeButton = view.findViewById<View>(R.id.close_button)
                 val bottomBorder =
                     view.findViewById<View>(R.id.favorite_bottom_border)
+                val settingsButton =
+                    view.findViewById<View>(R.id.settings_button)
 
                 // ----------------------------------------------------------------
-                // Bind data
+                // Bind
                 // ----------------------------------------------------------------
 
                 label.text = app.loadLabel(pm)
 
-                val favorite = isFavorite(pkg)
-                favIcon.isSelected = favorite
+                favIcon.isSelected = isFavorite(pkg)
 
                 actions.visibility =
                     if (openActionsFor == pkg) View.VISIBLE else View.GONE
 
-                // ----------------------------------------------------------------
-                // Clicks (shared behavior)
-                // ----------------------------------------------------------------
-
-                val launchClick = View.OnClickListener {
-                    launchApp(pkg, this)
-                }
-
-                label.setOnClickListener(launchClick)
-                emptySpace.setOnClickListener(launchClick)
+                bottomBorder.visibility =
+                    if (isLastFavorite(position)) View.VISIBLE else View.GONE
 
                 // ----------------------------------------------------------------
-                // Long presses
+                // Clicks
                 // ----------------------------------------------------------------
+
+                label.setOnClickListener { launchApp(pkg) }
+                emptySpace.setOnClickListener { launchApp(pkg) }
 
                 label.setOnLongClickListener {
-                    openRowActions(pkg, this)
+                    openRowActions(pkg)
                     true
                 }
 
@@ -172,35 +194,20 @@ class AppListHelper(
                     true
                 }
 
-                // ----------------------------------------------------------------
-                // Favorite toggle
-                // ----------------------------------------------------------------
+                settingsButton.setOnClickListener {
+                    openAppSettings(pkg)
+                }
 
                 favButton.setOnClickListener {
                     val newState = !favIcon.isSelected
                     favIcon.isSelected = newState
                     setFavorite(pkg, newState)
-
-                    openActionsFor = null
-                    sortApps()
-                    notifyDataSetChanged()
+                    refresh()
                 }
-
-                // ----------------------------------------------------------------
-                // Close actions
-                // ----------------------------------------------------------------
 
                 closeButton.setOnClickListener {
-                    closeRowActions(this)
+                    closeRowActions()
                 }
-
-                // ----------------------------------------------------------------
-                // Bottom border (last favorite)
-                // ----------------------------------------------------------------
-
-                bottomBorder.visibility =
-                    if (isLastFavorite(position)) View.VISIBLE
-                    else View.GONE
 
                 return view
             }
@@ -235,8 +242,7 @@ class AppListHelper(
                     openActionsFor != null
                 ) {
                     openActionsFor = null
-                    (listView.adapter as ArrayAdapter<*>)
-                        .notifyDataSetChanged()
+                    adapter.notifyDataSetChanged()
                 }
             }
 
