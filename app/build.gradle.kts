@@ -1,6 +1,15 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+}
+
+// Load keystore properties
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties().apply {
+    load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
@@ -14,30 +23,29 @@ android {
         versionCode = 12
         versionName = "26.01.08"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "android.test.InstrumentationTestRunner"
+    }
 
-        ndk {
-            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-        }
-
-        splits {
-            abi {
-                isEnable = true
-                reset()
-                include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-                isUniversalApk = false
-            }
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            isUniversalApk = true
         }
     }
 
-    dependenciesInfo {
-        includeInApk = false
-        includeInBundle = false
+    signingConfigs {
+        create("release") {
+            storeFile = file(keystoreProperties["RELEASE_STORE_FILE"] as String)
+            storePassword = keystoreProperties["RELEASE_STORE_PASSWORD"] as String
+            keyAlias = keystoreProperties["RELEASE_KEY_ALIAS"] as String
+            keyPassword = keystoreProperties["RELEASE_KEY_PASSWORD"] as String
+        }
     }
 
     buildTypes {
         debug {
-            // Prevent override of production
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-dev"
 
@@ -48,6 +56,7 @@ android {
         release {
             isMinifyEnabled = false
             isDebuggable = false
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
@@ -59,15 +68,17 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
 }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-
-    // Local unit tests
     testImplementation("junit:junit:4.13.2")
-
-    // Instrumentation tests
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
