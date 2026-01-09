@@ -17,6 +17,11 @@ android {
         testInstrumentationRunner = "android.test.InstrumentationTestRunner"
     }
 
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
