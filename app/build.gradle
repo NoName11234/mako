@@ -11,29 +11,33 @@ android {
         applicationId = "com.rama.mako"
         minSdk = 21
         targetSdk = 36
-        versionCode = 19
-        versionName = "26.01.1823"
+        versionCode = 20
+        versionName = "26." + "." + versionCode.toString()
 
         testInstrumentationRunner = "android.test.InstrumentationTestRunner"
     }
 
     dependenciesInfo {
         includeInApk = false
+        includeInApk = false
         includeInBundle = false
     }
 
+    applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                output -> outputFileName = "mako_${versionName}.apk"
+            }
+    }
+
     buildTypes {
+        release {
+            minifyEnabled = false
+            vcsInfo.include = false
+        }
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-dev"
-
-            isDebuggable = true
-            isMinifyEnabled = false
-        }
-
-        release {
-            isMinifyEnabled = false
-            isDebuggable = false
         }
     }
 
