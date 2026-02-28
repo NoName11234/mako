@@ -6,13 +6,13 @@ import android.view.View
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
-import com.rama.mako.AppListHelper
-import com.rama.mako.BaseFullscreenActivity
-import com.rama.mako.BatteryManagerHelper
-import com.rama.mako.ClockManager
+import com.rama.mako.managers.AppListManager
+import com.rama.mako.CsActivity
+import com.rama.mako.managers.BatteryManager
+import com.rama.mako.managers.ClockManager
 import com.rama.mako.R
 
-class MainActivity : BaseFullscreenActivity() {
+class MainActivity : CsActivity() {
 
     private lateinit var timeText: TextView
     private lateinit var dateText: TextView
@@ -20,8 +20,8 @@ class MainActivity : BaseFullscreenActivity() {
     private lateinit var listView: ListView
 
     private lateinit var clockManager: ClockManager
-    private lateinit var batteryHelper: BatteryManagerHelper
-    private lateinit var appListHelper: AppListHelper
+    private lateinit var batteryHelper: BatteryManager
+    private lateinit var appListManager: AppListManager
 
     private val prefs by lazy {
         getSharedPreferences("settings", MODE_PRIVATE)
@@ -48,7 +48,7 @@ class MainActivity : BaseFullscreenActivity() {
 
 
         // Battery
-        batteryHelper = BatteryManagerHelper(
+        batteryHelper = BatteryManager(
             context = this,
             callback = { status -> batteryText.text = status },
             prefs = prefs
@@ -57,14 +57,14 @@ class MainActivity : BaseFullscreenActivity() {
 
 
         // App List
-        appListHelper = AppListHelper(this, listView)
-        appListHelper.setup()
+        appListManager = AppListManager(this, listView)
+        appListManager.setup()
     }
 
     override fun onResume() {
         super.onResume()
         syncSettings()
-        appListHelper.refresh()
+        appListManager.refresh()
     }
 
     override fun onDestroy() {
@@ -104,6 +104,7 @@ class MainActivity : BaseFullscreenActivity() {
             }
         }
 
-        Toast.makeText(this, "No clock app found", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.no_clock_app_found_label), Toast.LENGTH_SHORT)
+            .show()
     }
 }
