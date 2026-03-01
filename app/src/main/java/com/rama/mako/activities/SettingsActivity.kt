@@ -34,6 +34,23 @@ class SettingsActivity : CsActivity() {
         setupClockFormat()
         setupCheckboxes()
         setupGroups()
+
+        val appOsSettingsBtn = findViewById<WdButton>(R.id.app_os_settings)
+        appOsSettingsBtn.setOnClickListener {
+            try {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = android.net.Uri.fromParts("package", packageName, null)
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this,
+                    getString(R.string.unable_open_settings_toast),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     // ------------------- Basic buttons -------------------
@@ -172,7 +189,8 @@ class SettingsActivity : CsActivity() {
                 val newName = s?.toString()?.trim() ?: return
                 if (oldName != newName && newName.isNotEmpty()) {
                     groupsManager.renameGroup(oldName, newName)
-                    val index = groups.indexOf(oldName)
+                    val index =
+                        groups.indexOfFirst { it.trim().equals(oldName.trim(), ignoreCase = true) }
                     if (index != -1) groups[index] = newName
                     nameEdit.tag = newName
                 }
