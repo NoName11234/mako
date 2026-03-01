@@ -51,7 +51,7 @@
 
     <!-- Settings -->
     <string name="settings">Configurações</string>
-    <string name="global_header">Global</string>
+    <string name="others_header">Outros</string>
     <string name="clock_header">Relógio</string>
     <string name="date_header">Data e bateria</string>
     <string name="styles_header">Estilos</string>

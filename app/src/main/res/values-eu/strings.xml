@@ -51,7 +51,7 @@
 
     <!-- Settings -->
     <string name="settings">Ezarpenak</string>
-    <string name="global_header">Orokorra</string>
+    <string name="others_header">Besteak</string>
     <string name="clock_header">Ordua</string>
     <string name="date_header">Data eta bateria</string>
     <string name="styles_header">Estiloak</string>
@@ -72,7 +72,7 @@
     <string name="clock_24">24 ordu</string>
     <string name="clock_12">12 ordu (AM/PM)</string>
     <string name="open_app_settings_label">Aplikazioaren ezarpenak irekitu</string>
-    
+
     <!-- Popup :: Context Menu App -->
     <string name="rename_app">Aplikazioa berrizendatu</string>
     <string name="add_to_favorites">Taldean gehitu...</string>
