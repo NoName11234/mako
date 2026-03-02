@@ -48,6 +48,16 @@ No network access is required.
   ** or use **[Obtanium](https://github.com/ImranR98/Obtainium)** to get the newest version directly
   from the github releases.
 
+## Signing certificate hash
+
+**SHA-256 Fingerprint:**
+
+```
+8D:29:CC:EC:70:F0:C1:AD:6F:F5:FC:C2:3B:C2:49:D4:20:47:6D:B9:F3:A0:48:18:E9:11:26:BA:9A:D2:A9:78
+```
+
+---
+
 ## License
 
 **Mako** is Free Software. You are free to use, study, share, and improve it under the terms of the
