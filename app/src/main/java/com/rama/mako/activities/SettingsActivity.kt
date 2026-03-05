@@ -32,6 +32,7 @@ class SettingsActivity : CsActivity() {
 
         setupBasicButtons()
         setupClockFormat()
+        setupFontStyle()
         setupCheckboxes()
         setupGroups()
 
@@ -81,6 +82,29 @@ class SettingsActivity : CsActivity() {
         }
     }
 
+    // ------------------- Font style -------------------
+    private fun setupFontStyle() {
+        val fontStyleGroup = findViewById<RadioGroup>(R.id.font_style_group)
+        when {
+            prefs.getFontStyle() == "jersey" -> fontStyleGroup.check(R.id.font_jersey)
+            prefs.getFontStyle() == "montserrat" -> fontStyleGroup.check(R.id.font_montserrat)
+            prefs.getFontStyle() == "robotoslab" -> fontStyleGroup.check(R.id.font_robotoslab)
+            prefs.getClockFormat() == "quicksand" -> fontStyleGroup.check(R.id.font_quicksand)
+            else -> fontStyleGroup.check(R.id.font_system)
+        }
+
+        fontStyleGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.font_jersey -> prefs.setFontJersey()
+                R.id.font_quicksand -> prefs.setFontQuicksand()
+                R.id.font_robotoslab -> prefs.setFontRobotoslab()
+                R.id.font_montserrat -> prefs.setFontMontserrat()
+                R.id.font_system -> prefs.setFontSystem()
+            }
+            refreshFont()
+        }
+    }
+
     // ------------------- Clock format -------------------
     private fun setupClockFormat() {
         val clockFormatGroup = findViewById<RadioGroup>(R.id.clock_format_group)
@@ -103,29 +127,50 @@ class SettingsActivity : CsActivity() {
 
     // ------------------- Checkboxes -------------------
     private fun setupCheckboxes() {
-        bindWdCheckbox(R.id.show_date, "show_date", true, dependentViewId = R.id.show_year_day)
+        bindWdCheckbox(
+            R.id.show_date,
+            "show_date",
+            true,
+            dependentViewIds = listOf(R.id.show_year_day)
+        )
+        bindWdCheckbox(R.id.show_search, "show_search", true)
         bindWdCheckbox(R.id.show_year_day, "show_year_day", true)
-        bindWdCheckbox(R.id.show_battery, "show_battery", true)
-        bindWdCheckbox(R.id.use_pixel_font, "use_pixel_font", false) { refreshFont() }
+        bindWdCheckbox(
+            R.id.show_battery,
+            "show_battery",
+            true,
+            dependentViewIds = listOf(
+                R.id.show_battery_temperature,
+                R.id.show_battery_charge_status
+            )
+        )
+        bindWdCheckbox(R.id.show_battery_temperature, "show_battery_temperature", true)
+        bindWdCheckbox(R.id.show_battery_charge_status, "show_battery_charge_status", true)
     }
+
 
     private fun bindWdCheckbox(
         wdCheckboxId: Int,
         prefKey: String,
         defaultValue: Boolean,
-        dependentViewId: Int? = null,
+        dependentViewIds: List<Int>? = null,
         onChange: ((Boolean) -> Unit)? = null
     ) {
         val wdCheckbox = findViewById<WdCheckbox>(wdCheckboxId)
-        val dependentView = dependentViewId?.let { findViewById<View>(it) }
+
+        // Collect all dependent views in a list
+        val dependentViews: List<View>? = dependentViewIds?.map { findViewById<View>(it) }
 
         val isChecked = prefs.getBoolean(prefKey, defaultValue)
         wdCheckbox.setChecked(isChecked)
-        dependentView?.visibility = if (isChecked) View.VISIBLE else View.GONE
+
+        // Set initial visibility for all dependent views
+        dependentViews?.forEach { it.visibility = if (isChecked) View.VISIBLE else View.GONE }
 
         wdCheckbox.setOnCheckedChangeListener { checked ->
             prefs.setBoolean(prefKey, checked)
-            dependentView?.visibility = if (checked) View.VISIBLE else View.GONE
+            // Update visibility for all dependent views
+            dependentViews?.forEach { it.visibility = if (checked) View.VISIBLE else View.GONE }
             onChange?.invoke(checked)
         }
     }

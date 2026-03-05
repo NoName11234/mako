@@ -19,8 +19,35 @@ class PrefsManager private constructor(context: Context) {
         }
     }
 
-    // Clock
+    fun isSearchVisible(): Boolean = prefs.getBoolean("show_search", true)
     fun isClockVisible(): Boolean = prefs.getBoolean("show_clock", true)
+    fun isBatteryVisible(): Boolean = prefs.getBoolean("show_battery", true)
+    fun isBatteryTemperatureVisible(): Boolean = prefs.getBoolean("show_battery_temperature", true)
+    fun isBatteryChargeStatusVisible(): Boolean =
+        prefs.getBoolean("show_battery_charge_status", true)
+
+    fun isDateVisible(): Boolean = prefs.getBoolean("show_date", true)
+    fun isYearDayVisible(): Boolean = prefs.getBoolean("show_year_day", true)
+    fun isGroupVisible(group: String): Boolean = prefs.getBoolean("group_visibility_$group", true)
+
+    // Fonts
+    fun getFontStyle(): String? = prefs.getString("font_style", "system")
+    fun setFontSystem() =
+        prefs.edit().putString("font_style", "system").apply()
+
+    fun setFontQuicksand() =
+        prefs.edit().putString("font_style", "quicksand").apply()
+
+    fun setFontMontserrat() =
+        prefs.edit().putString("font_style", "montserrat").apply()
+
+    fun setFontRobotoslab() =
+        prefs.edit().putString("font_style", "robotoslab").apply()
+
+    fun setFontJersey() =
+        prefs.edit().putString("font_style", "jersey").apply()
+
+    // Clock
     fun getClockFormat(): String? = prefs.getString("clock_format", "system")
     fun setClockNone() = prefs.edit().putBoolean("show_clock", false).remove("clock_format").apply()
     fun setClockSystem() =
@@ -33,7 +60,6 @@ class PrefsManager private constructor(context: Context) {
         prefs.edit().putBoolean("show_clock", true).putString("clock_format", "12").apply()
 
     // Groups
-    fun isGroupVisible(group: String): Boolean = prefs.getBoolean("group_visibility_$group", true)
     fun setGroupVisible(group: String, visible: Boolean) =
         prefs.edit().putBoolean("group_visibility_$group", visible).apply()
 
