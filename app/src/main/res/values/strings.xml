@@ -1,6 +1,4 @@
 <resources>
-    <!-- <string name=""></string> -->
-
     <!-- Global -->
     <string name="go_back_label">Go Back</string>
     <string name="new_group_header">------ New Group</string>
@@ -42,7 +40,7 @@
     <string name="icon_ads_desc">No Ads</string>
     <string name="icon_location_desc">No Trackers</string>
     <string name="icon_offline_desc">Works Offline</string>
-    <string name="mako_url" translatable="false">github.com/pomboverso/mako</string>
+    <string name="mako_url" translatable="false">github.com/rama-io/mako</string>
     <string name="app_header">App</string>
     <string name="contributors_header">Contributors</string>
     <string name="icons_header">Icons</string>
@@ -65,6 +63,10 @@
     <string name="quicksand_url" translatable="false">github.com/andrew-paglinawan/QuicksandFamily</string>
     <string name="robotoslab_creator" translatable="false">Christian Robertson</string>
     <string name="robotoslab_url" translatable="false">github.com/googlefonts/robotoslab</string>
+    <string name="isotjs" translatable="false">isotjs</string>
+    <string name="isotjs_url" translatable="false">github.com/isotjs</string>
+    <string name="etwasmitbaum" translatable="false">etwasmitbaum</string>
+    <string name="etwasmitbaum_url" translatable="false">github.com/etwasmitbaum</string>
 
     <!-- Settings -->
     <string name="settings_header">Settings</string>
@@ -78,6 +80,7 @@
     <string name="temperature_header">Temperature</string>
     <string name="groups_header">Groups</string>
     <string name="system_header">System</string>
+    <string name="background_header">Background</string>
 
     <string name="settings_section_home_title">Home screen</string>
     <string name="settings_section_appearance_title">Appearance</string>
@@ -135,6 +138,10 @@
     <string name="font_montserrat_label" translatable="false">Montserrat</string>
     <string name="font_robotoslab_label" translatable="false">Roboto Slab</string>
     <string name="font_style_header">Font Style</string>
+    <string name="background_default_label">Default theme</string>
+    <string name="background_wallpaper_label">Wallpaper</string>
+    <string name="background_dynamic_label">Dynamic colour</string>
+    <string name="background_amoled_label">AMOLED black</string>
 
     <!-- Popup :: Context Menu App -->
     <string name="rename_app">Rename app...</string>
@@ -165,4 +172,5 @@
 
     <!-- Dialog :: Pick Icon Pack -->
     <string name="pick_icon_pack_disclaimer">Choose an installed icon pack. If an icon is missing, Mako will use the system icon for that app.</string>
+    <string name="always_show_search_bar">Always visible</string>
 </resources>

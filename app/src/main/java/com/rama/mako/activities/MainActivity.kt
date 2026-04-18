@@ -2,7 +2,10 @@ package com.rama.mako.activities
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.BroadcastReceiver
 import android.content.Intent
+import android.content.IntentFilter
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -16,7 +19,6 @@ import android.widget.TextView
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.ScrollView
 import android.widget.Toast
 import android.window.OnBackInvokedCallback
 import com.rama.mako.CsActivity
@@ -25,9 +27,8 @@ import com.rama.mako.managers.AppListManager
 import com.rama.mako.managers.AppsProvider
 import com.rama.mako.managers.BatteryManager
 import com.rama.mako.managers.ClockManager
-import com.rama.mako.managers.FontManager
+import com.rama.mako.managers.HomeBackgroundManager
 import com.rama.mako.managers.PrefsManager
-import com.rama.mako.widgets.WdButton
 
 class MainActivity : CsActivity() {
 
@@ -42,28 +43,49 @@ class MainActivity : CsActivity() {
     private lateinit var appsProvider: AppsProvider
 
     private lateinit var prefs: PrefsManager
+    private lateinit var homeBackgroundManager: HomeBackgroundManager
+    private lateinit var rootView: View
 
     private lateinit var searchField: EditText
     private lateinit var searchIcon: FrameLayout
     private lateinit var clearBtn: FrameLayout
+    private var isSearchBarAlwaysVisible = false
 
     private var backCallback: OnBackInvokedCallback? = null
     private var isSearchExpanded = false
     private var isProgrammaticSearchUpdate = false
     private val searchDebounceHandler = Handler(Looper.getMainLooper())
     private var searchDebounceRunnable: Runnable? = null
+    private var resumeRefreshRunnable: Runnable? = null
     private var currentSearchQuery: String = ""
+    private var wallpaperReceiverRegistered = false
+    private var lastAppliedBackgroundMode: String? = null
+    private var lastAppliedWallpaperSignature: Int? = null
+
+    companion object {
+        private const val WALLPAPER_CHANGED_ACTION = "android.intent.action.WALLPAPER_CHANGED"
+    }
+
+    private val wallpaperChangedReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: android.content.Context?, intent: Intent?) {
+            if (intent?.action == WALLPAPER_CHANGED_ACTION) {
+                applyHomeBackground()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PrefsManager.getInstance(this).initPrefs()
         setContentView(R.layout.view_home)
 
-        val root = findViewById<View>(R.id.root)
-        applyEdgeToEdgePadding(root)
+        rootView = findViewById(R.id.root)
+        applyEdgeToEdgePadding(rootView)
 
         // --- Prefs ---
         prefs = PrefsManager.getInstance(this)
+        homeBackgroundManager = HomeBackgroundManager(this)
+        applyHomeBackground(force = true)
 
         // --- Views ---
         timeText = findViewById(R.id.time)
@@ -90,7 +112,7 @@ class MainActivity : CsActivity() {
             listView,
             appsProvider
         ) {
-            if (isSearchExpanded) {
+            if (isSearchExpanded && !isSearchBarAlwaysVisible) {
                 collapseSearch()
             }
         }
@@ -111,11 +133,18 @@ class MainActivity : CsActivity() {
     private fun setupBackHandling() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             backCallback = OnBackInvokedCallback {
+                // If search is always visible, loose focus and collapse keyboard
+                if (isSearchBarAlwaysVisible) {
+                    searchField.clearFocus()
+                    val imm =
+                        getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+                    imm.hideSoftInputFromWindow(searchField.windowToken, 0)
+                }
                 // If search is expanded, collapse it; otherwise consume back to prevent launcher restart
-                if (isSearchExpanded) {
+                else if (isSearchExpanded) {
                     collapseSearch()
                 }
-                // If search is not expanded, do nothing (consume back to keep launcher open)
+                // Else, do nothing (consume back to keep launcher open)
             }
             onBackInvokedDispatcher.registerOnBackInvokedCallback(
                 android.window.OnBackInvokedDispatcher.PRIORITY_OVERLAY,
@@ -186,7 +215,8 @@ class MainActivity : CsActivity() {
 
         // Show field
         searchField.visibility = View.VISIBLE
-        searchField.requestFocus()
+        if (!isSearchBarAlwaysVisible)
+            searchField.requestFocus()
 
         val scaleX = ObjectAnimator.ofFloat(searchField, "scaleX", 0.8f, 1f)
         val scaleY = ObjectAnimator.ofFloat(searchField, "scaleY", 0.8f, 1f)
@@ -231,13 +261,29 @@ class MainActivity : CsActivity() {
 
     override fun onResume() {
         super.onResume()
+        applyHomeBackground()
+        if (shouldListenWallpaperChanges()) {
+            registerWallpaperReceiverIfNeeded()
+        } else {
+            unregisterWallpaperReceiverIfNeeded()
+        }
         syncSettings()
-        appListManager.refresh()
-        batteryManager.forceUpdate()
+        schedulePostResumeRefresh()
+
+        if (isSearchBarAlwaysVisible)
+            expandSearch()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterWallpaperReceiverIfNeeded()
+        clearPendingResumeRefresh()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        unregisterWallpaperReceiverIfNeeded()
+        clearPendingResumeRefresh()
 
         // Clean up debounce handler
         searchDebounceRunnable?.let { searchDebounceHandler.removeCallbacks(it) }
@@ -253,16 +299,25 @@ class MainActivity : CsActivity() {
 
     override fun onBackPressed() {
         // Handle back for below Android 12
-        if (isSearchExpanded) {
+        // If search is always visible, loose focus and collapse keyboard
+        if (isSearchBarAlwaysVisible) {
+            searchField.clearFocus()
+            val imm =
+                getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+            imm.hideSoftInputFromWindow(searchField.windowToken, 0)
+        }
+        // If search is expanded, collapse it; otherwise consume back to prevent launcher restart
+        else if (isSearchExpanded) {
             collapseSearch()
         }
-        // Otherwise consume back to prevent launcher from restarting
+        // Else, do nothing (consume back to keep launcher open)
     }
 
     // --- Settings sync (row visibility only) ---
     private fun syncSettings() {
         val searchVisible = prefs.isSearchVisible()
 
+        isSearchBarAlwaysVisible = prefs.isSearchBarAlwaysVisible()
         timeText.visibility =
             if (prefs.getClockFormat() != PrefsManager.ClockFormat.NONE) View.VISIBLE else View.GONE
         findViewById<View>(R.id.date_row).visibility =
@@ -272,7 +327,7 @@ class MainActivity : CsActivity() {
         findViewById<View>(R.id.searchbar).visibility =
             if (searchVisible) View.VISIBLE else View.GONE
         searchIcon.visibility =
-            if (searchVisible) View.VISIBLE else View.GONE
+            if (searchVisible && !isSearchBarAlwaysVisible) View.VISIBLE else View.GONE
     }
 
     // --- Open system clock safely ---
@@ -290,5 +345,93 @@ class MainActivity : CsActivity() {
                 }
             }
         }
+    }
+
+    private fun applyHomeBackground(force: Boolean = false) {
+        val mode = prefs.getHomeBackgroundMode()
+        val wallpaperSignature =
+            if (homeBackgroundManager.shouldTrackWallpaperChangesForMode(mode)) {
+                homeBackgroundManager.getWallpaperSignature()
+            } else {
+                null
+            }
+
+        if (!force && mode == lastAppliedBackgroundMode && wallpaperSignature == lastAppliedWallpaperSignature) {
+            return
+        }
+
+        if (mode == PrefsManager.BackgroundMode.WALLPAPER) {
+            applyWallpaperModeBackground()
+        } else {
+            disableWindowWallpaper(mode)
+            homeBackgroundManager.applyTo(rootView, mode)
+        }
+
+        lastAppliedBackgroundMode = mode
+        lastAppliedWallpaperSignature = wallpaperSignature
+    }
+
+    private fun applyWallpaperModeBackground() {
+        enableWindowWallpaper()
+        rootView.setBackgroundColor(Color.TRANSPARENT)
+    }
+
+    private fun enableWindowWallpaper() {
+        window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
+        window.setBackgroundDrawable(homeBackgroundManager.createWallpaperOverlayDrawable())
+    }
+
+    private fun disableWindowWallpaper(mode: String) {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
+        window.setBackgroundDrawable(homeBackgroundManager.createBackgroundDrawable(mode))
+    }
+
+    private fun schedulePostResumeRefresh() {
+        clearPendingResumeRefresh()
+
+        resumeRefreshRunnable = Runnable {
+            if (isFinishing || isDestroyed) return@Runnable
+            appListManager.refresh()
+            batteryManager.forceUpdate()
+        }
+
+        rootView.post(resumeRefreshRunnable)
+    }
+
+    private fun clearPendingResumeRefresh() {
+        resumeRefreshRunnable?.let {
+            rootView.removeCallbacks(it)
+        }
+        resumeRefreshRunnable = null
+    }
+
+    private fun shouldListenWallpaperChanges(): Boolean {
+        val mode = prefs.getHomeBackgroundMode()
+        return homeBackgroundManager.shouldTrackWallpaperChangesForMode(mode)
+    }
+
+    private fun registerWallpaperReceiverIfNeeded() {
+        if (wallpaperReceiverRegistered) return
+
+        val filter = IntentFilter(WALLPAPER_CHANGED_ACTION)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(
+                wallpaperChangedReceiver,
+                filter,
+                RECEIVER_NOT_EXPORTED
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            registerReceiver(wallpaperChangedReceiver, filter)
+        }
+
+        wallpaperReceiverRegistered = true
+    }
+
+    private fun unregisterWallpaperReceiverIfNeeded() {
+        if (!wallpaperReceiverRegistered) return
+
+        runCatching { unregisterReceiver(wallpaperChangedReceiver) }
+        wallpaperReceiverRegistered = false
     }
 }
