@@ -1,4 +1,4 @@
-![Preview](./docs/img/mako_header_1024x630.svg)
+![Preview](./docs/img/mako_header_1200x630.svg)
 
 # Mako
 
