@@ -56,6 +56,8 @@
     <string name="system_header">System</string>
     <string name="background_header">Hintergrund</string>
 
+    <string name="show_profile_indicator_label">Profilindikator anzeigen</string>
+    <!--    <string name="show_hidden_apps_label">Versteckte Apps anzeigen</string>-->
     <string name="settings_section_home_title">Startseite</string>
     <string name="settings_section_appearance_title">Erscheinungsbild</string>
     <string name="settings_section_groups_title">Gruppen</string>
